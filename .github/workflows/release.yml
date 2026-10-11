@@ -1,0 +1,30 @@
+# Выкладывает файлы игр из этой ветки в Releases (оттуда сайт берёт ссылки и счётчики скачиваний).
+# Строка в releases.txt: метка|название|файлы через пробел. Уже выложенный файл не трогается, чтобы не обнулить его счётчик.
+# Новая версия игры = новая метка в releases.txt.
+name: Release game files
+on:
+  push:
+    branches: [game-files]
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency: release
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create releases and upload missing files
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          while IFS='|' read -r TAG TITLE FILES; do
+            [ -z "$TAG" ] && continue
+            if ! gh release view "$TAG" >/dev/null 2>&1; then
+              gh release create "$TAG" --target main --title "$TITLE" --notes "Сайт студии: https://spedyterr-rgb.github.io/pyatigorsk-hub/"
+            fi
+            HAVE="$(gh release view "$TAG" --json assets -q '.assets[].name')"
+            for F in $FILES; do
+              if [ -f "$F" ] && ! grep -qxF "$F" <<<"$HAVE"; then gh release upload "$TAG" "$F"; fi
+            done
+          done < releases.txt

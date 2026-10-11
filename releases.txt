@@ -1,0 +1,3 @@
+severnaya-v0.1|Северная 0.1|Severnaya_Windows.zip
+night-shift-v0.2|Ночная смена 0.2|NightShift_Windows.zip
+zov-osirisa-v1.3|Зов Осириса 1.3|ZovOsirisa_Windows.zip ZovOsirisa.apk
