@@ -1,4 +1,4 @@
-# Ежедневный замер скачиваний: дописывает строку в data/history.json. Запускается из GitHub Actions.
+# Ежедневный замер скачиваний: дописывает строку в data/history.json. Запускает GitHub Actions раз в сутки.
 import json, subprocess, datetime
 cfg = json.load(open("data/games.json", encoding="utf-8"))
 counts = {}
