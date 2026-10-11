@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Статистика скачиваний — PYATIGORSK HUB</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <a class="mark" href="./">PYATIGORSK HUB</a>
+    <nav aria-label="Разделы"><a href="./">Игры</a><a href="https://t.me/shopyarchi" rel="noopener">Telegram</a></nav>
+  </div>
+
+  <div class="page-head">
+    <h1>Скачивания</h1>
+    <p>Считает GitHub: каждое скачивание файла с кнопки на сайте или по прямой ссылке. Обновляется сразу, страница перечитывает числа раз в пять минут.</p>
+    <button class="plain" id="refresh" type="button">Обновить сейчас</button>
+    <span class="note" id="stamp"></span>
+  </div>
+
+  <div class="msg" id="msg" hidden></div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="block">
+    <h2>По играм</h2>
+    <div class="bars" id="bars"></div>
+  </div>
+
+  <div class="block">
+    <h2>По дням</h2>
+    <div class="chart" id="chart" hidden></div>
+    <div class="legend" id="legend" hidden></div>
+    <p class="note" id="histnote">График строится из ежедневных замеров. Первый замер делается после выкладки сайта, линия появится, когда наберётся хотя бы два дня.</p>
+  </div>
+
+  <div class="block">
+    <h2>По файлам</h2>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Игра</th><th>Файл</th><th>Платформа</th><th class="r">Размер</th><th>Выложен</th><th class="r">Скачиваний</th></tr></thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <p class="note">У «Зова Осириса» сюда прибавлены скачивания со старого сайта игры, чтобы счёт не обнулился.</p>
+  </div>
+</div>
+
+<footer style="margin-top:60px">
+  <div class="wrap cols"><div><p><strong>PYATIGORSK HUB</strong></p><p>Developer — yarchi · Game Designer — Vlad Montana</p></div></div>
+</footer>
+
+<script src="app.js"></script>
+<script>
+(function () {
+  var TONE = { "severnaya": "var(--ice)", "night-shift": "var(--neon)", "zov-osirisa": "var(--duat)" };
+  var HEX = { "severnaya": "#bfe3f2", "night-shift": "#ff5a48", "zov-osirisa": "#45e0a0" };
+  function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
+  function day(iso) { return iso ? new Date(iso).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "—"; }
+
+  function show(s) {
+    var cards = document.getElementById("cards"); cards.textContent = "";
+    var all = el("div", null, "card"); all.appendChild(el("b", Hub.fmt(s.total), "num")); all.appendChild(el("span", "всего")); cards.appendChild(all);
+    var max = Math.max.apply(null, s.games.map(function (g) { return g.n; }).concat([1]));
+    var bars = document.getElementById("bars"); bars.textContent = "";
+    var rows = document.getElementById("rows"); rows.textContent = "";
+    s.games.forEach(function (g) {
+      var c = el("div", null, "card"); c.style.setProperty("--tone", TONE[g.id] || "var(--lamp)");
+      c.appendChild(el("b", Hub.fmt(g.n), "num")); c.appendChild(el("span", g.title)); cards.appendChild(c);
+      var r = el("div", null, "row"); r.style.setProperty("--tone", TONE[g.id] || "var(--lamp)");
+      r.appendChild(el("div", g.title));
+      var tr = el("div", null, "track"); var f = el("div", null, "fill"); f.style.width = (g.n / max * 100) + "%"; tr.appendChild(f); r.appendChild(tr);
+      r.appendChild(el("div", Hub.fmt(g.n), "n num")); bars.appendChild(r);
+      g.files.forEach(function (x) {
+        var t = document.createElement("tr");
+        t.appendChild(el("td", g.title + " " + g.version));
+        var td = el("td"); var a = el("a", x.name); a.href = x.url; td.appendChild(a); t.appendChild(td);
+        t.appendChild(el("td", x.platform));
+        t.appendChild(el("td", x.size ? Hub.mb(x.size) : "—", "r num"));
+        t.appendChild(el("td", x.live ? day(x.date) : "ещё не выложен"));
+        t.appendChild(el("td", Hub.fmt(x.n), "r num"));
+        rows.appendChild(t);
+      });
+    });
+    document.getElementById("stamp").textContent = " Числа на " + new Date(s.t).toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" });
+  }
+
+  // График по дням: сколько скачали за каждый день (разница между соседними замерами).
+  function chart(hist) {
+    if (!hist || hist.length < 2) return;
+    var ids = Object.keys(HEX), W = 1000, H = 300, L = 46, R = 12, T = 14, B = 34;
+    var days = [], top = 1;
+    for (var i = 1; i < hist.length; i++) {
+      var d = { date: hist[i].date, v: {} };
+      ids.forEach(function (id) { var n = Math.max(0, (hist[i].games[id] || 0) - (hist[i - 1].games[id] || 0)); d.v[id] = n; if (n > top) top = n; });
+      days.push(d);
+    }
+    var step = Math.pow(10, Math.floor(Math.log10(top))); var ymax = Math.ceil(top / step) * step;
+    function x(i) { return days.length === 1 ? (L + (W - R)) / 2 : L + (W - L - R) * i / (days.length - 1); }
+    function y(v) { return T + (H - T - B) * (1 - v / ymax); }
+    var NS = "http://www.w3.org/2000/svg", svg = document.createElementNS(NS, "svg"); svg.setAttribute("viewBox", "0 0 " + W + " " + H);
+    svg.setAttribute("role", "img"); svg.setAttribute("aria-label", "Скачивания по дням для каждой игры");
+    function add(tag, at, text) { var e = document.createElementNS(NS, tag); for (var k in at) e.setAttribute(k, at[k]); if (text != null) e.textContent = text; svg.appendChild(e); return e; }
+    for (var g = 0; g <= 4; g++) {
+      var v = ymax * g / 4;
+      add("line", { x1: L, x2: W - R, y1: y(v), y2: y(v), stroke: "#2a3745", "stroke-width": 1 });
+      add("text", { x: L - 8, y: y(v) + 4, "text-anchor": "end", fill: "#8d9aa8", "font-size": 13 }, String(Math.round(v)));
+    }
+    var every = Math.max(1, Math.ceil(days.length / 8));
+    days.forEach(function (d, i) {
+      if (i % every === 0 || i === days.length - 1) add("text", { x: x(i), y: H - 10, "text-anchor": "middle", fill: "#8d9aa8", "font-size": 13 }, d.date.slice(8) + "." + d.date.slice(5, 7));
+    });
+    ids.forEach(function (id) {
+      add("polyline", { fill: "none", stroke: HEX[id], "stroke-width": 2.5, "stroke-linejoin": "round", points: days.map(function (d, i) { return x(i) + "," + y(d.v[id]); }).join(" ") });
+      days.forEach(function (d, i) { var c = add("circle", { cx: x(i), cy: y(d.v[id]), r: 4, fill: HEX[id] }); var t = document.createElementNS(NS, "title"); t.textContent = d.date + ": " + d.v[id]; c.appendChild(t); });
+    });
+    var box = document.getElementById("chart"); box.textContent = ""; box.appendChild(svg); box.hidden = false;
+    var lg = document.getElementById("legend"); lg.textContent = "";
+    [["severnaya", "Северная"], ["night-shift", "Ночная смена"], ["zov-osirisa", "Зов Осириса"]].forEach(function (p) {
+      var s = el("span"); var i = el("i"); i.style.background = HEX[p[0]]; s.appendChild(i); s.appendChild(document.createTextNode(p[1])); lg.appendChild(s);
+    });
+    lg.hidden = false; document.getElementById("histnote").textContent = "Сколько раз скачали каждую игру за день. Замер делается раз в сутки.";
+  }
+
+  function run(force) {
+    var msg = document.getElementById("msg"); msg.hidden = true;
+    Hub.load(force).then(show).catch(function (e) {
+      msg.hidden = false;
+      msg.textContent = e.message === "limit"
+        ? "GitHub временно не отдаёт числа: с этого адреса было слишком много запросов за час. Попробуй обновить позже."
+        : "Не получилось получить числа с GitHub. Проверь интернет и нажми «Обновить сейчас».";
+    });
+    Hub.getJSON("data/history.json?" + Date.now()).then(chart).catch(function () {});
+  }
+  document.getElementById("refresh").addEventListener("click", function () { run(true); });
+  run(false);
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+/* PYATIGORSK HUB. Ночной склон: сланцевая синь, туман и янтарь натриевого фонаря.
+   У каждой игры свой цвет: «Северная» — лёд, «Ночная смена» — красный неон, «Зов Осириса» — зелёный свет Дуата. */
+:root {
+  color-scheme: dark;
+  --night: #0e141b; --slate: #151e28; --slate-2: #1c2733; --line: #2a3745;
+  --fog: #dbe1e6; --mute: #8d9aa8; --lamp: #f0a437; --lamp-hi: #ffd08a;
+  --ice: #bfe3f2; --neon: #ff5a48; --duat: #45e0a0;
+  --display: "Unbounded", "Arial Black", sans-serif;
+  --body: "Onest", "Segoe UI", Roboto, Arial, sans-serif;
+  --wrap: 1180px;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+body { margin: 0; background: var(--night); color: var(--fog); font: 17px/1.6 var(--body); overflow-x: hidden; }
+img, video { max-width: 100%; display: block; }
+a { color: var(--lamp-hi); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--lamp); outline-offset: 3px; }
+.wrap { max-width: var(--wrap); margin: 0 auto; padding-inline: 20px; }
+h1, h2, h3 { font-family: var(--display); margin: 0; text-wrap: balance; }
+.num { font-variant-numeric: tabular-nums; }
+
+/* ---- шапка ---- */
+.bar { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; padding-block: 22px; }
+.bar .mark { font-family: var(--display); font-weight: 600; font-size: 15px; letter-spacing: .08em; color: var(--fog); text-decoration: none; }
+.bar nav { display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px; }
+.bar nav a { color: var(--fog); text-decoration: none; border-bottom: 1px solid transparent; padding-bottom: 2px; }
+.bar nav a:hover { border-bottom-color: var(--lamp); }
+
+/* ---- первый экран: хребет из пяти вершин ---- */
+.top { position: relative; padding-bottom: 56px; }
+.ridge { display: block; width: 100%; height: auto; margin-top: clamp(10px, 4vw, 48px); overflow: visible; }
+.ridge .glow { fill: url(#lampfade); }
+.ridge .crest { fill: none; stroke: var(--lamp); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round;
+  stroke-dasharray: 1700; stroke-dashoffset: 1700; animation: draw 2.2s .15s cubic-bezier(.3,.1,.2,1) forwards; }
+@keyframes draw { to { stroke-dashoffset: 0; } }
+h1 { font-weight: 800; font-size: clamp(38px, 9.4vw, 124px); line-height: .92; letter-spacing: -.01em; margin-top: -0.12em; position: relative; }
+h1 span { display: block; }
+h1 .hub { color: transparent; -webkit-text-stroke: 1.5px var(--lamp); }
+.intro { display: grid; grid-template-columns: minmax(0, 34em) auto; gap: 24px 48px; align-items: end; margin-top: 28px; }
+.intro p { margin: 0; font-size: clamp(17px, 2vw, 20px); }
+.tally { text-align: right; }
+.tally b { display: block; font-family: var(--display); font-weight: 600; font-size: clamp(34px, 5vw, 56px); line-height: 1; color: var(--lamp-hi); }
+.tally span { color: var(--mute); font-size: 15px; }
+
+/* ---- игра ---- */
+.game { --tone: var(--lamp); position: relative; padding-block: 72px; border-top: 1px solid var(--line); }
+.game.sev { --tone: var(--ice); } .game.ns { --tone: var(--neon); } .game.zov { --tone: var(--duat); }
+.game .grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; align-items: start; }
+.game.flip .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
+.game.flip .shotbox { order: 2; }
+.shotbox .main { border: 1px solid var(--line); background: var(--slate); aspect-ratio: 16 / 9; width: 100%; object-fit: cover; }
+.shotbox video.main { aspect-ratio: 16 / 9; background: #000; }
+.strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.strip a { display: block; border: 1px solid var(--line); overflow: hidden; aspect-ratio: 16 / 9; background: var(--slate); }
+.strip img { width: 100%; height: 100%; object-fit: cover; }
+.strip a:hover { border-color: var(--tone); }
+.game h2 { font-weight: 700; font-size: clamp(30px, 4.6vw, 54px); line-height: 1; color: var(--tone); }
+.game .kind { margin: 12px 0 0; color: var(--mute); font-size: 15px; }
+.game .about { margin: 18px 0 0; }
+.facts { margin: 22px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: auto 1fr; gap: 6px 18px; font-size: 15px; }
+.facts dt { color: var(--mute); } .facts dd { margin: 0; }
+.dl { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.btn { display: inline-flex; flex-direction: column; gap: 3px; min-width: 220px; padding: 13px 20px; text-decoration: none;
+  background: var(--tone); color: #0b1016; border: 1px solid var(--tone); border-radius: 3px; transition: filter .15s, transform .15s; }
+.btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+.btn b { font-family: var(--display); font-weight: 600; font-size: 17px; }
+.btn small { font-size: 13px; opacity: .8; }
+.got { margin: 16px 0 0; font-size: 15px; color: var(--mute); }
+.got b { color: var(--fog); font-weight: 600; }
+details.how { margin-top: 18px; font-size: 15px; border-left: 2px solid var(--line); padding-left: 14px; }
+details.how summary { cursor: pointer; color: var(--fog); }
+details.how ol { margin: 10px 0 0; padding-left: 20px; color: var(--mute); }
+
+/* ---- низ ---- */
+footer { border-top: 1px solid var(--line); padding-block: 44px 60px; color: var(--mute); font-size: 15px; }
+footer .cols { display: flex; justify-content: space-between; gap: 28px; flex-wrap: wrap; }
+footer strong { color: var(--fog); font-weight: 600; }
+footer p { margin: 0 0 6px; }
+
+/* ---- статистика ---- */
+.page-head { padding-block: 26px 10px; }
+.page-head h1 { font-size: clamp(30px, 6vw, 64px); margin-top: 0; }
+.page-head p { color: var(--mute); max-width: 44em; }
+.cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-top: 26px; }
+.card { background: var(--slate); border: 1px solid var(--line); border-top: 3px solid var(--tone, var(--lamp)); padding: 18px 20px; }
+.card b { display: block; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 3.6vw, 42px); line-height: 1.1; color: var(--tone, var(--lamp-hi)); }
+.card span { color: var(--mute); font-size: 15px; }
+.block { margin-top: 44px; }
+.block h2 { font-size: 22px; font-weight: 600; }
+.bars { margin-top: 18px; display: grid; gap: 12px; }
+.bars .row { display: grid; grid-template-columns: 170px 1fr 70px; gap: 14px; align-items: center; font-size: 15px; }
+.bars .track { background: var(--slate); height: 18px; border: 1px solid var(--line); }
+.bars .fill { height: 100%; background: var(--tone); min-width: 2px; transition: width .5s; }
+.bars .n { text-align: right; }
+.tablewrap { overflow-x: auto; margin-top: 16px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; min-width: 640px; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+th { color: var(--mute); font-weight: 500; }
+td.r, th.r { text-align: right; }
+.chart { margin-top: 16px; background: var(--slate); border: 1px solid var(--line); padding: 14px; }
+.chart svg { width: 100%; height: auto; display: block; }
+.legend { display: flex; gap: 18px; flex-wrap: wrap; font-size: 14px; color: var(--mute); margin-top: 10px; }
+.legend i { display: inline-block; width: 18px; height: 3px; vertical-align: middle; margin-right: 6px; }
+.note { color: var(--mute); font-size: 15px; margin-top: 12px; max-width: 46em; }
+.msg { margin-top: 20px; padding: 12px 16px; border-left: 3px solid var(--neon); background: rgba(255, 90, 72, .1); max-width: 46em; }
+button.plain { font: inherit; color: var(--night); background: var(--lamp); border: 0; border-radius: 3px; padding: 9px 16px; cursor: pointer; }
+button.plain:hover { filter: brightness(1.1); }
+
+@media (max-width: 860px) {
+  .game .grid, .game.flip .grid { grid-template-columns: 1fr; gap: 26px; }
+  .game.flip .shotbox { order: 0; }
+  .intro { grid-template-columns: 1fr; } .tally { text-align: left; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .bars .row { grid-template-columns: 110px 1fr 54px; }
+  .game { padding-block: 52px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .ridge .crest { animation: none; stroke-dashoffset: 0; }
+  .btn, .bars .fill { transition: none; }
+}
