@@ -3,7 +3,7 @@
   "repo": "pyatigorsk-hub",
   "extraRepos": ["zov-osirisa"],
   "games": [
-    { "id": "severnaya", "title": "Северная", "tag": "severnaya-v0.1", "version": "0.1",
+    { "id": "severnaya", "title": "Северная", "tag": "severnaya-v1.0", "version": "1.0",
       "files": [ { "name": "Severnaya_Windows.zip", "platform": "Windows" } ] },
     { "id": "night-shift", "title": "Ночная смена", "tag": "night-shift-v0.2", "version": "0.2",
       "files": [ { "name": "NightShift_Windows.zip", "platform": "Windows" } ] },
