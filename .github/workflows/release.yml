@@ -28,3 +28,10 @@ jobs:
               if [ -f "$F" ] && ! grep -qxF "$F" <<<"$HAVE"; then gh release upload "$TAG" "$F"; fi
             done
           done < releases.txt
+          # Устаревшие версии из retired.txt убираются вместе с файлами.
+          if [ -f retired.txt ]; then
+            while read -r OLD; do
+              [ -z "$OLD" ] && continue
+              if gh release view "$OLD" >/dev/null 2>&1; then gh release delete "$OLD" --yes --cleanup-tag; fi
+            done < retired.txt
+          fi
