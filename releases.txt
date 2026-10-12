@@ -1,4 +1,4 @@
 severnaya-v1.0|Северная 1.0|Severnaya_Windows.zip
 night-shift-v0.2|Ночная смена 0.2|NightShift_Windows.zip
 zov-osirisa-v1.3|Зов Осириса 1.3|ZovOsirisa_Windows.zip ZovOsirisa.apk
-tuman-v1.1|Позывной: Туман 1.1|Tuman_Windows.zip Tuman.apk
+tuman-v1.2|Позывной: Туман 1.2|Tuman_Windows.zip Tuman.apk
