@@ -8,6 +8,8 @@
     { "id": "night-shift", "title": "Ночная смена", "tag": "night-shift-v0.2", "version": "0.2",
       "files": [ { "name": "NightShift_Windows.zip", "platform": "Windows" } ] },
     { "id": "zov-osirisa", "title": "Зов Осириса", "tag": "zov-osirisa-v1.3", "version": "1.3",
-      "files": [ { "name": "ZovOsirisa_Windows.zip", "platform": "Windows" }, { "name": "ZovOsirisa.apk", "platform": "Android" } ] }
+      "files": [ { "name": "ZovOsirisa_Windows.zip", "platform": "Windows" }, { "name": "ZovOsirisa.apk", "platform": "Android" } ] },
+    { "id": "tuman", "title": "Позывной: Туман", "tag": "tuman-v1.0", "version": "1.0",
+      "files": [ { "name": "Tuman_Windows.zip", "platform": "Windows" }, { "name": "Tuman.apk", "platform": "Android" } ] }
   ]
 }

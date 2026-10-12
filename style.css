@@ -45,7 +45,7 @@ h1 .hub { color: transparent; -webkit-text-stroke: 1.5px var(--lamp); }
 
 /* ---- игра ---- */
 .game { --tone: var(--lamp); position: relative; padding-block: 72px; border-top: 1px solid var(--line); }
-.game.sev { --tone: var(--ice); } .game.ns { --tone: var(--neon); } .game.zov { --tone: var(--duat); }
+.game.sev { --tone: var(--ice); } .game.ns { --tone: var(--neon); } .game.zov { --tone: var(--duat); } .game.tm { --tone: #c9d18a; }
 .game .grid { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 40px; align-items: start; }
 .game.flip .grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 .game.flip .shotbox { order: 2; }
