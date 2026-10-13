@@ -4,3 +4,4 @@ tuman-v1.1
 tuman-v1.2
 tuman-v1.3
 tuman-v1.4
+tuman-v1.5
