@@ -60,8 +60,8 @@
 <script src="app.js"></script>
 <script>
 (function () {
-  var TONE = { "severnaya": "var(--ice)", "night-shift": "var(--neon)", "zov-osirisa": "var(--duat)" };
-  var HEX = { "severnaya": "#bfe3f2", "night-shift": "#ff5a48", "zov-osirisa": "#45e0a0" };
+  var TONE = { "severnaya": "var(--ice)", "night-shift": "var(--neon)", "zov-osirisa": "var(--duat)", "uberi-telefon": "#ff3b3b" };
+  var HEX = { "severnaya": "#bfe3f2", "night-shift": "#ff5a48", "zov-osirisa": "#45e0a0", "uberi-telefon": "#ff3b3b" };
   function el(tag, text, cls) { var e = document.createElement(tag); if (text != null) e.textContent = text; if (cls) e.className = cls; return e; }
   function day(iso) { return iso ? new Date(iso).toLocaleDateString("ru-RU", { day: "numeric", month: "long", year: "numeric" }) : "—"; }
 
@@ -123,7 +123,7 @@
     });
     var box = document.getElementById("chart"); box.textContent = ""; box.appendChild(svg); box.hidden = false;
     var lg = document.getElementById("legend"); lg.textContent = "";
-    [["severnaya", "Северная"], ["night-shift", "Ночная смена"], ["zov-osirisa", "Зов Осириса"]].forEach(function (p) {
+    [["severnaya", "Северная"], ["night-shift", "Ночная смена"], ["zov-osirisa", "Зов Осириса"], ["uberi-telefon", "Убери телефон"]].forEach(function (p) {
       var s = el("span"); var i = el("i"); i.style.background = HEX[p[0]]; s.appendChild(i); s.appendChild(document.createTextNode(p[1])); lg.appendChild(s);
     });
     lg.hidden = false; document.getElementById("histnote").textContent = "Сколько раз скачали каждую игру за день. Замер делается раз в сутки.";
